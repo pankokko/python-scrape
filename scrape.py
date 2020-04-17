@@ -28,23 +28,11 @@ WebDriverWait(driver, 30).until(
     EC.presence_of_element_located((By.CSS_SELECTOR, Selector))
 )
 
-
 while True:
     driver.find_element_by_class_name('m-read-more').click()
     time.sleep(5)
     if not driver.find_element_by_class_name('m-read-more').click():
         break
-
-
-# for i in range(10):
-#     driver.find_element_by_class_name('m-read-more').click()
-#     time.sleep(5)
-
-# print(time.time())
-
-# driver.find_element_by_class_name('m-read-more').click()
-
-# driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
 
 soup = BeautifulSoup(driver.page_source, features="html.parser")
 for uri in soup.select(Selector):
