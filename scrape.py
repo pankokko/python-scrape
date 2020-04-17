@@ -1,6 +1,7 @@
 URL      = "https://itp.ne.jp/keyword/?areaword=&keyword=%E7%97%85%E9%99%A2%E3%83%BB%E5%8C%BB%E9%99%A2"
 #詳細ページへのリンクを取得
 Selector = ".m-article-card__header__title__link"
+#↓↓↓↓自身の環境にあったパスに変更してください↓↓↓↓↓
 path = "/Users/teshigawararyou/Downloads/chromedriver"
 # 必須
 import time
