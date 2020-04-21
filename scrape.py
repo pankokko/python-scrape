@@ -1,10 +1,5 @@
-<<<<<<< Updated upstream
-URL      = "https://itp.ne.jp/keyword/?areaword=&keyword=%E7%97%85%E9%99%A2%E3%83%BB%E5%8C%BB%E9%99%A2"
-#詳細ページへのリンクを取得
-=======
 URL   = "https://itp.ne.jp/keyword/?areaword=&keyword=%E7%97%85%E9%99%A2%E3%83%BB%E5%8C%BB%E9%99%A2"
 # ランキング内の画像がターゲット
->>>>>>> Stashed changes
 Selector = ".m-article-card__header__title__link"
 #↓↓↓↓自身の環境にあったパスに変更してください↓↓↓↓↓
 path = "/Users/teshigawararyou/Downloads/chromedriver"
@@ -35,11 +30,17 @@ WebDriverWait(driver, 30).until(
 )
 
 #さらに表示ボタンが表示されなくなるまで無限ループ
-while True:
-    driver.find_element_by_class_name('m-read-more').click()
-    time.sleep(5)
-    if not driver.find_element_by_class_name('m-read-more').click():
-        break
+# while True:
+#     driver.find_element_by_class_name('m-read-more').click()
+#     time.sleep(8)
+#     if not driver.find_element_by_class_name('m-read-more').click():
+#         break
+
+
+for i in range(10):
+  driver.find_element_by_class_name('m-read-more').click()
+  time.sleep(7)
+
 
 soup = BeautifulSoup(driver.page_source, features="html.parser")
 for uri in soup.select(Selector):

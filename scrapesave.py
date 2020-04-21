@@ -43,11 +43,17 @@ WebDriverWait(driver, 30).until(
     EC.presence_of_element_located((By.CSS_SELECTOR, Selector))
 )
 
-while True:
-    driver.find_element_by_class_name('m-read-more').click()
-    time.sleep(10)
-    if not driver.find_element_by_class_name('m-read-more').click():
-        break
+# while True:
+#     driver.find_element_by_class_name('m-read-more').click()
+#     time.sleep(10)
+#     if not driver.find_element_by_class_name('m-read-more').click():
+#         break
+
+#range 1あたりにつき20件のデータが取得出来ます。
+for i in range(5):
+  driver.find_element_by_class_name('m-read-more').click()
+  time.sleep(4)
+
 
 soup = BeautifulSoup(driver.page_source, features="html.parser")
 
@@ -95,7 +101,6 @@ for uri in soup.select(Selector):
     print(fax)
     print(email)
     print(tel)
-
 
     s = pd.Series([hospital_name, fax, tel, address, email])
     df = pd.DataFrame()
