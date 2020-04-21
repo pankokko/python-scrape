@@ -35,9 +35,9 @@ WebDriverWait(driver, 30).until(
 #     time.sleep(8)
 #     if not driver.find_element_by_class_name('m-read-more').click():
 #         break
+MAX_DATA = 10
 
-
-for i in range(10):
+for i in range(MAX_DATA):
   driver.find_element_by_class_name('m-read-more').click()
   time.sleep(7)
 

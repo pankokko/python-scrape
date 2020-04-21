@@ -49,8 +49,10 @@ WebDriverWait(driver, 30).until(
 #     if not driver.find_element_by_class_name('m-read-more').click():
 #         break
 
-#range 1あたりにつき20件のデータが取得出来ます。
-for i in range(5):
+#1あたりにつき20件のデータが取得出来ます。
+MAX_DATA = 20
+
+for i in range(MAX_DATA):
   driver.find_element_by_class_name('m-read-more').click()
   time.sleep(4)
 
@@ -61,11 +63,11 @@ for uri in soup.select(Selector):
     link =  uri.get('href')
     URL = link + "about/"
     # 詳細ページから病院情報を取得する
-    Selector1 = "body > div.container > div > div > div > div.main > div > article.item.item-table > div > section.item-body.basic > dl:nth-child(1) > dd"
-    Selector2 = "body > div.container > div > div > div > div.main > div > article.item.item-table > div > section.item-body.basic > dl:nth-child(5) > dd > p:nth-child(1)"
-    Selector3 = "body > div.container > div > div > div > div.main > div > article.item.item-table > div > section.item-body.basic > dl:nth-child(4) > dd"
-    Selector4 = "body > div.container > div > div > div > div.main > div > article.item.item-table > div > section.item-body.basic > dl:nth-child(10) > dd"
-    Selector5 = "body > div.container > div > div > div > div.main > div > article.item.item-table > div > section.item-body.basic > dl:nth-child(3) > dd > p.tell"
+    Selector1 = "body > div.container > div > div > div > div.main > div > article.item.item-table > div > section.item-body.basic > dl:nth-of-type(1) > dd"
+    Selector2 = "body > div.container > div > div > div > div.main > div > article.item.item-table > div > section.item-body.basic > dl:nth-of-type(5) > dd > p:nth-of-type(1)"
+    Selector3 = "body > div.container > div > div > div > div.main > div > article.item.item-table > div > section.item-body.basic > dl:nth-of-type(4) > dd"
+    Selector4 = "body > div.container > div > div > div > div.main > div > article.item.item-table > div > section.item-body.basic > dl:nth-of-type(10) > dd"
+    Selector5 = "body > div.container > div > div > div > div.main > div > article.item.item-table > div > section.item-body.basic > dl:nth-of-type(3) > dd > p.tell"
     
     # 各病院の詳細ページにアクセス
     driver.get(URL)
