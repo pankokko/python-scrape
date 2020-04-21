@@ -1,14 +1,3 @@
-<<<<<<< Updated upstream
-URL      = "https://itp.ne.jp/keyword/?areaword=&keyword=%E7%97%85%E9%99%A2%E3%83%BB%E5%8C%BB%E9%99%A2"
-#詳細ページへのリンクを取得
-=======
-URL   = "https://itp.ne.jp/keyword/?areaword=&keyword=%E7%97%85%E9%99%A2%E3%83%BB%E5%8C%BB%E9%99%A2"
-# ランキング内の画像がターゲット
->>>>>>> Stashed changes
-Selector = ".m-article-card__header__title__link"
-#↓↓↓↓自身の環境にあったパスに変更してください↓↓↓↓↓
-path = "/Users/teshigawararyou/Downloads/chromedriver"
-# 必須
 import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -17,8 +6,28 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup
+import pandas as pd
+
+URL      = "https://itp.ne.jp/keyword/?areaword=&keyword=%E7%97%85%E9%99%A2%E3%83%BB%E5%8C%BB%E9%99%A2"
+#詳細ページへのリンクを取得
+Selector = ".m-article-card__header__title__link"
+path = "/Users/teshigawararyou/Downloads/chromedriver"
 
 # Selenium用オプション quiitaの記事からコピー
+# options = webdriver.ChromeOptions()
+# options.add_argument('--headless')
+# options.add_argument('--no-sandbox')
+# options.add_argument('--disable-dev-shm-usage')
+# options.add_argument("--disable-gpu");
+# options.add_argument("--disable-extensions");
+# options.add_argument("--proxy-server='direct://'");
+# options.add_argument("--proxy-bypass-list=*");
+# options.add_argument("--start-maximized");
+
+#↓↓↓↓↓↓↓↓↓↓options=optionsのところでエラーが発生、options=opでないとダメのようです。
+# driver = webdriver.Chrome('chromedriver',options=options)
+
+
 op = Options()
 op.add_argument("--disable-gpu");
 op.add_argument("--disable-extensions");
@@ -28,20 +37,20 @@ op.add_argument("--start-maximized");
 op.add_argument("--headless");
 driver = webdriver.Chrome(path,chrome_options=op)
 
-# ページアクセス
+# ページへアクセス
 driver.get(URL)
 WebDriverWait(driver, 30).until(
     EC.presence_of_element_located((By.CSS_SELECTOR, Selector))
 )
 
-#さらに表示ボタンが表示されなくなるまで無限ループ
 while True:
     driver.find_element_by_class_name('m-read-more').click()
-    time.sleep(5)
+    time.sleep(10)
     if not driver.find_element_by_class_name('m-read-more').click():
         break
 
 soup = BeautifulSoup(driver.page_source, features="html.parser")
+
 for uri in soup.select(Selector):
     link =  uri.get('href')
     URL = link + "about/"
@@ -51,26 +60,7 @@ for uri in soup.select(Selector):
     Selector3 = "body > div.container > div > div > div > div.main > div > article.item.item-table > div > section.item-body.basic > dl:nth-child(4) > dd"
     Selector4 = "body > div.container > div > div > div > div.main > div > article.item.item-table > div > section.item-body.basic > dl:nth-child(10) > dd"
     Selector5 = "body > div.container > div > div > div > div.main > div > article.item.item-table > div > section.item-body.basic > dl:nth-child(3) > dd > p.tell"
-    path = "/Users/teshigawararyou/Downloads/chromedriver"
     
-    from selenium import webdriver
-    from selenium.webdriver.chrome.options import Options
-    from selenium.webdriver.support.ui import WebDriverWait
-    from selenium.webdriver.support import expected_conditions as EC
-    from selenium.webdriver.common.by import By
-    from selenium.webdriver.common.keys import Keys
-    from bs4 import BeautifulSoup
-
-    # Selenium用オプション quiitaの記事を参考にしてコピーしました
-    op = Options()
-    op.add_argument("--disable-gpu");
-    op.add_argument("--disable-extensions");
-    op.add_argument("--proxy-server='direct://'");
-    op.add_argument("--proxy-bypass-list=*");
-    op.add_argument("--start-maximized");
-    op.add_argument("--headless");
-    driver = webdriver.Chrome(path,chrome_options=op)
-
     # 各病院の詳細ページにアクセス
     driver.get(URL)
     WebDriverWait(driver, 30).until(
@@ -100,9 +90,14 @@ for uri in soup.select(Selector):
     fax = soup.select(Selector3)[0].string
     email = soup.select(Selector4)[0].string
     tel = soup.select(Selector5)[0].string
-    
     print(hospital_name)
-    print(fax)
-    print(tel)
     print(address)
+    print(fax)
     print(email)
+    print(tel)
+
+
+    s = pd.Series([hospital_name, fax, tel, address, email])
+    df = pd.DataFrame()
+    df_append = df.append(s, ignore_index=True)
+    df_append.to_csv("itown.csv" , mode="a")
