@@ -39,23 +39,24 @@ driver = webdriver.Chrome(path,chrome_options=op)
 
 # ページへアクセス
 driver.get(URL)
+
 WebDriverWait(driver, 30).until(
-    EC.presence_of_element_located((By.CSS_SELECTOR, Selector))
+  EC.presence_of_element_located((By.CSS_SELECTOR, Selector))
 )
 
-# while True:
-#     driver.find_element_by_class_name('m-read-more').click()
-#     time.sleep(10)
-#     if not driver.find_element_by_class_name('m-read-more').click():
-#         break
 
 #1あたりにつき20件のデータが取得出来ます。
-MAX_DATA = 20
+MAX_DATA = 10
 
 for i in range(MAX_DATA):
-  driver.find_element_by_class_name('m-read-more').click()
-  time.sleep(4)
 
+    try:
+      driver.find_element_by_class_name('m-read-more').click()
+      time.sleep(5)
+    except NoSuchElementException:
+      break
+
+ 
 
 soup = BeautifulSoup(driver.page_source, features="html.parser")
 
@@ -69,28 +70,23 @@ for uri in soup.select(Selector):
     Selector4 = "body > div.container > div > div > div > div.main > div > article.item.item-table > div > section.item-body.basic > dl:nth-of-type(10) > dd"
     Selector5 = "body > div.container > div > div > div > div.main > div > article.item.item-table > div > section.item-body.basic > dl:nth-of-type(3) > dd > p.tell"
     
+    attributes = [Selector1,Selector2,Selector3,Selector4,Selector5]
+
+
     # 各病院の詳細ページにアクセス
-    driver.get(URL)
-    WebDriverWait(driver, 30).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, Selector1))
-    )
-    driver.get(URL)
-    WebDriverWait(driver, 30).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, Selector2))
-    )
-    driver.get(URL)
-    WebDriverWait(driver, 30).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, Selector3))
-    )
-    driver.get(URL)
-    WebDriverWait(driver, 30).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, Selector4))
-    )
-    
-    driver.get(URL)
-    WebDriverWait(driver, 30).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, Selector5))
-    )
+
+    for page in attributes:
+        try:
+          driver.get(URL)
+          WebDriverWait(driver, 30).until(
+          EC.presence_of_element_located((By.CSS_SELECTOR, page))
+          )
+        except TimeoutException:
+          driver.get(URL)
+          WebDriverWait(driver, 30).until(
+          EC.presence_of_element_located((By.CSS_SELECTOR, page))
+          )
+      
 
     soup = BeautifulSoup(driver.page_source, features="html.parser")
     hospital_name = soup.select(Selector1)[0].string
@@ -104,7 +100,8 @@ for uri in soup.select(Selector):
     print(email)
     print(tel)
 
+    dataColumns = ['病院名','住所','FAX','電話番号','Email']
     s = pd.Series([hospital_name, fax, tel, address, email])
     df = pd.DataFrame()
     df_append = df.append(s, ignore_index=True)
-    df_append.to_csv("itown.csv" , mode="a")
+    df_append.to_csv("itown.csv" , mode="a", header=False, index=False)
