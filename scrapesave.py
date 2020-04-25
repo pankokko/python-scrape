@@ -13,20 +13,6 @@ URL      = "https://itp.ne.jp/keyword/?areaword=&keyword=%E7%97%85%E9%99%A2%E3%8
 Selector = ".m-article-card__header__title__link"
 path = "/Users/teshigawararyou/Downloads/chromedriver"
 
-# Selenium用オプション quiitaの記事からコピー
-# options = webdriver.ChromeOptions()
-# options.add_argument('--headless')
-# options.add_argument('--no-sandbox')
-# options.add_argument('--disable-dev-shm-usage')
-# options.add_argument("--disable-gpu");
-# options.add_argument("--disable-extensions");
-# options.add_argument("--proxy-server='direct://'");
-# options.add_argument("--proxy-bypass-list=*");
-# options.add_argument("--start-maximized");
-
-#↓↓↓↓↓↓↓↓↓↓options=optionsのところでエラーが発生、options=opでないとダメのようです。
-# driver = webdriver.Chrome('chromedriver',options=options)
-
 
 op = Options()
 op.add_argument("--disable-gpu");
@@ -55,8 +41,6 @@ for i in range(MAX_DATA):
       time.sleep(5)
     except NoSuchElementException:
       break
-
- 
 
 soup = BeautifulSoup(driver.page_source, features="html.parser")
 
