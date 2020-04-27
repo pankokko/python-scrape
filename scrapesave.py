@@ -5,8 +5,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import TimeoutException
 from bs4 import BeautifulSoup
 import pandas as pd
+
 
 URL      = "https://itp.ne.jp/keyword/?areaword=&keyword=%E7%97%85%E9%99%A2%E3%83%BB%E5%8C%BB%E9%99%A2"
 #詳細ページへのリンクを取得
@@ -30,15 +33,14 @@ WebDriverWait(driver, 30).until(
   EC.presence_of_element_located((By.CSS_SELECTOR, Selector))
 )
 
-
 #1あたりにつき20件のデータが取得出来ます。
-MAX_DATA = 10
+MAX_DATA = 2
 
 for i in range(MAX_DATA):
 
     try:
       driver.find_element_by_class_name('m-read-more').click()
-      time.sleep(5)
+      time.sleep(7)
     except NoSuchElementException:
       break
 
@@ -59,16 +61,16 @@ for uri in soup.select(Selector):
 
     # 各病院の詳細ページにアクセス
 
-    for page in attributes:
+    for attribute in attributes:
         try:
           driver.get(URL)
           WebDriverWait(driver, 30).until(
-          EC.presence_of_element_located((By.CSS_SELECTOR, page))
+          EC.presence_of_element_located((By.CSS_SELECTOR, attribute))
           )
-        except TimeoutException:
+        except :
           driver.get(URL)
           WebDriverWait(driver, 30).until(
-          EC.presence_of_element_located((By.CSS_SELECTOR, page))
+          EC.presence_of_element_located((By.CSS_SELECTOR, attribute))
           )
       
 
